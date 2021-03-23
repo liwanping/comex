@@ -14,6 +14,7 @@
 
     <modules>
         <module>comex-remoting</module>
+        <module>comex-serialize</module>
         <module>comex-spring</module>
     </modules>
 
@@ -43,6 +44,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>comex-remoting</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>comex-serialize</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.yushu.comex</groupId>
+            <artifactId>comex-serialize</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>

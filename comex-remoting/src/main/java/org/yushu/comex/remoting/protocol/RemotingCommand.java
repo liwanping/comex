@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.yushu.comex.remoting.CommandCustomHeader;
 import org.yushu.comex.remoting.annotation.CFNotNull;
 import org.yushu.comex.remoting.exception.RemotingCommandException;
+import org.yushu.comex.serialize.SerializeType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

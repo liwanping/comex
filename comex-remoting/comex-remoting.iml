@@ -21,6 +21,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="comex-serialize" />
     <orderEntry type="library" name="Maven: io.netty:netty-all:4.1.51.Final" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.60" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />

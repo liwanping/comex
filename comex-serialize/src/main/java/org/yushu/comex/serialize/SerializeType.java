@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package org.yushu.comex.remoting.protocol;
+package org.yushu.comex.serialize;
 
 public enum SerializeType {
     JSON((byte) 0),
-    PROTOBUF((byte) 1);
+    KRYO((byte) 1),
+    PROTOBUF((byte) 2);
 
     private final byte code;
 
