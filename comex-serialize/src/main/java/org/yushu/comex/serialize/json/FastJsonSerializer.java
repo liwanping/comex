@@ -1,7 +1,11 @@
 package org.yushu.comex.serialize.json;
 
+import com.alibaba.fastjson.JSON;
 import org.yushu.comex.serialize.SerializeType;
 import org.yushu.comex.serialize.Serializer;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author: frank.li
@@ -9,23 +13,25 @@ import org.yushu.comex.serialize.Serializer;
  */
 public class FastJsonSerializer implements Serializer {
 
+    private final static Charset CHARSET_UTF8 = StandardCharsets.UTF_8;
+
     @Override
     public byte type() {
         return SerializeType.JSON.getCode();
     }
 
     @Override
-    public byte[] serialize(Object object) throws Exception {
-        return new byte[0];
-    }
-
-    @Override
-    public Object deserialize(byte[] bytes, Class<?> type) throws Exception {
+    public byte[] serialize(Object object) {
+        String json = JSON.toJSONString(object);
+        if (json != null) {
+            return json.getBytes(CHARSET_UTF8);
+        }
         return null;
     }
 
     @Override
-    public Object deserialize(byte[] bytes) throws Exception {
-        return null;
+    public <T> T deserialize(byte[] bytes, Class<T> classOfT) {
+        String json = new String(bytes, CHARSET_UTF8);
+        return JSON.parseObject(json, classOfT);
     }
 }

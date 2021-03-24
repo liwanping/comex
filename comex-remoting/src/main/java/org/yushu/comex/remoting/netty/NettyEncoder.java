@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.yushu.comex.remoting.common.RemotingHelper;
 import org.yushu.comex.remoting.common.RemotingUtil;
 import org.yushu.comex.remoting.protocol.RemotingCommand;
+import org.yushu.comex.remoting.protocol.RemotingSerializer;
 
 import java.nio.ByteBuffer;
 
@@ -37,7 +38,7 @@ public class NettyEncoder extends MessageToByteEncoder<RemotingCommand> {
     public void encode(ChannelHandlerContext ctx, RemotingCommand remotingCommand, ByteBuf out) throws Exception {
 
         try {
-            ByteBuffer header = remotingCommand.encodeHeader();
+            ByteBuffer header = RemotingSerializer.encodeHeader(remotingCommand);
             out.writeBytes(header);
             byte[] body = remotingCommand.getBody();
             if (body != null) {

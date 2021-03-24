@@ -19,8 +19,7 @@ package org.yushu.comex.serialize;
 
 public enum SerializeType {
     JSON((byte) 0),
-    KRYO((byte) 1),
-    PROTOBUF((byte) 2);
+    KRYO((byte) 1);
 
     private final byte code;
 

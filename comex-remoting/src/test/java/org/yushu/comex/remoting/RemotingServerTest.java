@@ -4,8 +4,6 @@ import io.netty.channel.ChannelHandlerContext;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.yushu.comex.remoting.annotation.CFNullable;
-import org.yushu.comex.remoting.exception.RemotingCommandException;
 import org.yushu.comex.remoting.exception.RemotingConnectException;
 import org.yushu.comex.remoting.exception.RemotingSendRequestException;
 import org.yushu.comex.remoting.exception.RemotingTimeoutException;
@@ -21,9 +19,7 @@ import org.yushu.comex.remoting.protocol.RemotingCommand;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author: frank.li
@@ -42,6 +38,7 @@ public class RemotingServerTest {
             @Override
             public RemotingCommand processRequest(ChannelHandlerContext ctx, RemotingCommand request) {
                 request.setRemark("Hi " + ctx.channel().remoteAddress());
+                request.setBody(("Hi " + new String(request.getBody())).getBytes());
                 return request;
             }
 
@@ -81,21 +78,19 @@ public class RemotingServerTest {
     @Test
     public void testInvokeSync() throws InterruptedException, RemotingConnectException,
             RemotingSendRequestException, RemotingTimeoutException {
-        RequestHeader requestHeader = new RequestHeader();
-        requestHeader.setCount(1);
-        requestHeader.setMessageTitle("Welcome");
-        RemotingCommand request = RemotingCommand.createRequestCommand(0, requestHeader);
+        RemotingCommand request = RemotingCommand.createRequestCommand(0);
+        request.setBody("testing sync".getBytes());
         RemotingCommand response = remotingClient.invokeSync("localhost:8888", request, 1000 * 3);
         assertNotNull(response);
-        assertThat(response.getExtFields()).hasSize(2);
+        assertNotNull(response.getRemark());
     }
 
     @Test
     public void testInvokeOneway() throws InterruptedException, RemotingConnectException,
             RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
 
-        RemotingCommand request = RemotingCommand.createRequestCommand(0, null);
-        request.setRemark("messi");
+        RemotingCommand request = RemotingCommand.createRequestCommand(0);
+        request.setBody("testing oneway".getBytes());
         remotingClient.invokeOneway("localhost:8888", request, 1000 * 3);
     }
 
@@ -104,44 +99,18 @@ public class RemotingServerTest {
             RemotingTimeoutException, RemotingTooMuchRequestException, RemotingSendRequestException {
 
         final CountDownLatch latch = new CountDownLatch(1);
-        RemotingCommand request = RemotingCommand.createRequestCommand(0, null);
-        request.setRemark("messi");
+        RemotingCommand request = RemotingCommand.createRequestCommand(0);
+        request.setBody("testing async".getBytes());
         remotingClient.invokeAsync("localhost:8888", request, 1000 * 3, new InvokeCallback() {
             @Override
             public void operationComplete(ResponseFuture responseFuture) {
                 latch.countDown();
                 assertNotNull(responseFuture);
-                assertThat(responseFuture.getResponseCommand().getExtFields()).hasSize(2);
+                assertNotNull(responseFuture.getResponseCommand());
+                assertNotNull(responseFuture.getResponseCommand().getRemark());
             }
         });
         latch.await();
-    }
-
-    static class RequestHeader implements CommandCustomHeader {
-        @CFNullable
-        private Integer count;
-        @CFNullable
-        private String messageTitle;
-
-        @Override
-        public void checkFields() throws RemotingCommandException {
-        }
-
-        public Integer getCount() {
-            return count;
-        }
-
-        public void setCount(Integer count) {
-            this.count = count;
-        }
-
-        public String getMessageTitle() {
-            return messageTitle;
-        }
-
-        public void setMessageTitle(String messageTitle) {
-            this.messageTitle = messageTitle;
-        }
     }
 }
 

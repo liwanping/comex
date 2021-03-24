@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yushu.comex.remoting.common.RemotingHelper;
 import org.yushu.comex.remoting.common.RemotingUtil;
-import org.yushu.comex.remoting.protocol.RemotingCommand;
+import org.yushu.comex.remoting.protocol.RemotingSerializer;
 
 import java.nio.ByteBuffer;
 
@@ -50,7 +50,7 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder {
 
             ByteBuffer byteBuffer = frame.nioBuffer();
 
-            return RemotingCommand.decode(byteBuffer);
+            return RemotingSerializer.decode(byteBuffer);
         } catch (Exception e) {
             LOGGER.error("decode exception, " + RemotingHelper.parseChannelRemoteAddr(ctx.channel()), e);
             RemotingUtil.closeChannel(ctx.channel());
